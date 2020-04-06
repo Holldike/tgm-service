@@ -1,5 +1,6 @@
 <?php
 
+use \Symfony\Component\HttpFoundation\Response;
 
 class Application
 {
@@ -16,25 +17,34 @@ class Application
 
     public function run()
     {
+        $response = new Response();
         $routeInfo = $this->router->dispatch();
+
         switch ($routeInfo[0]) {
             case FastRoute\Dispatcher::NOT_FOUND:
-                // ... 404 Not Found
+                $response->setStatusCode(Response::HTTP_NOT_FOUND);
                 break;
+
             case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+                $response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED);
                 $allowedMethods = $routeInfo[1];
-                // ... 405 Method Not Allowed
                 break;
+
             case FastRoute\Dispatcher::FOUND:
                 $action = $routeInfo[1];
                 $vars = $routeInfo[2];
 
-                if ($this->requestValidator->valid($action)) {
-                    $this->telegram->$action(...array_values($vars));
+                if (!$errors = $this->requestValidator->valid($action)) {
+                    $responseData = $this->telegram->$action(...array_values($vars));
                 } else {
-                    $this->requestValidator->getErrors();
+                    $responseData = $errors;
                 }
+
+                $response->setContent(json_encode([$responseData]));
                 break;
+
         }
+
+        return $response;
     }
 }

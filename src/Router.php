@@ -1,6 +1,5 @@
 <?php
 
-
 use FastRoute\Dispatcher;
 
 class Router

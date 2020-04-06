@@ -1,10 +1,11 @@
 <?php
-require_once 'bootstrap.php';
+require_once 'vendor/autoload.php';
 
 use \MtProtoDriver\MadelineProto;
 
 $driver = new MadelineProto();
-$driver->login();
+
+//$driver->login();
 
 $telegram = new Telegram($driver);
 $router = new Router();
@@ -16,4 +17,5 @@ $application = new Application(
     $requestValidator
 );
 
-$application->run();
+$response = $application->run();
+$response->send();
