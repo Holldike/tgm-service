@@ -1,10 +1,10 @@
-#Requirements#
-*  docker
-*  docker-compose
+#Requirements
+* docker
+* docker-compose
 
-###Get Started###
+###Get Started
 ```
 git clone  https://holldike@bitbucket.org/IgorOliynik/tgm-service.git
-cd telegram
+cd tgm-service
 docker-compose up
 ```
