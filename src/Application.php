@@ -55,7 +55,7 @@ class Application
                 break;
         }
 
-        $this->logger->log($this->request, $response);
+        //$this->logger->log($this->request, $response);
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;

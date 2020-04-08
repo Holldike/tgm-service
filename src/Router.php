@@ -17,7 +17,7 @@ class Router
 
     public function dispatch(Request $request)
     {
-        $uri = $request->getUri();
+        $uri = $request->getRequestUri();
 
         if (false !== $pos = strpos($uri, '?')) {
             $uri = substr($uri, 0, $pos);
