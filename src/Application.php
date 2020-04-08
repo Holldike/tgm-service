@@ -27,7 +27,7 @@ class Application
 
             case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 $response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED);
-                $allowedMethods = $routeInfo[1];
+                //$allowedMethods = $routeInfo[1];
                 break;
 
             case FastRoute\Dispatcher::FOUND:
@@ -42,7 +42,6 @@ class Application
 
                 $response->setContent(json_encode([$responseData]));
                 break;
-
         }
 
         return $response;

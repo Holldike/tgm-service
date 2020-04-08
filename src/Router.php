@@ -9,7 +9,7 @@ class Router
     public function __construct()
     {
         $this->dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-            $r->get('/api/getMessage/{messageId:\d+}', 'getMessage');
+            $r->get('/api/getMessage/{message_id:\d+}', 'getMessage');
             $r->post('/api/sendMessage/{phone:\d+}', 'sendMessage');
         });
     }

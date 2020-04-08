@@ -11,12 +11,12 @@ class Telegram implements Api
 
     public function sendMessage(string $phone)
     {
-        $this->driver->sendMessage($phone);
+        return $this->driver->sendMessage($phone);
     }
 
-    public function getMessage(int $messageId)
+    public function getMessage(int $message_id)
     {
-        $this->driver->getMessage($messageId);
+        return $this->driver->getMessage($message_id);
     }
 
     public function login()

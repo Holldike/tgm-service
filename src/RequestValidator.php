@@ -3,17 +3,17 @@
 
 class RequestValidator
 {
-    private array $errors;
-
     public function valid(string $request)
     {
+        $error = [];
+
         if ($request === 'sendMessage') {
-            if (!$json_request = (json_decode($_POST))) {
-                $this->errors[] = 'It accepts only json request';
+            if (!$json_request =  json_decode(file_get_contents('php://input'), true)) {
+                $error[] = 'It accepts only json request';
             };
 
             if (!isset($json_request['text'])) {
-                $this->errors[] = 'You have to pass a message text';
+                $error[] = 'You have to pass a message text';
             };
         }
 
@@ -21,7 +21,7 @@ class RequestValidator
             //...
         }
 
-        return $this->errors;
+        return $error;
     }
 
 }
