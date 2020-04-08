@@ -8,13 +8,15 @@ $driver = new MadelineProto();
 
 $driver->login();
 
+$requestValidator = new RequestValidator();
 $telegram = new Telegram($driver);
 $router = new Router();
-$requestValidator = new RequestValidator();
+$logger = new Logger();
 
 $application = new Application(
     $router,
     $telegram,
+    $logger,
     $requestValidator
 );
 

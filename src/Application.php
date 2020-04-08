@@ -4,15 +4,17 @@ use \Symfony\Component\HttpFoundation\Response;
 
 class Application
 {
+    private RequestValidator $requestValidator;
     private Telegram $telegram;
     private Router $router;
-    private RequestValidator $requestValidator;
+    private Logger $logger;
 
-    public function __construct(Router $router, Telegram $telegram, RequestValidator $requestValidator)
+    public function __construct(Router $router, Telegram $telegram, Logger $logger, RequestValidator $requestValidator)
     {
-        $this->router = $router;
         $this->requestValidator = $requestValidator;
         $this->telegram = $telegram;
+        $this->router = $router;
+        $this->logger = $logger;
     }
 
     public function run()

@@ -8,7 +8,7 @@ class RequestValidator
         $error = [];
 
         if ($request === 'sendMessage') {
-            if (!$json_request =  json_decode(file_get_contents('php://input'), true)) {
+            if (!$json_request = json_decode(file_get_contents('php://input'), true)) {
                 $error[] = 'It accepts only json request';
             };
 
