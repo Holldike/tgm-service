@@ -1,6 +1,7 @@
 <?php
 
 use FastRoute\Dispatcher;
+use Symfony\Component\HttpFoundation\Request;
 
 class Router
 {
@@ -14,16 +15,16 @@ class Router
         });
     }
 
-    public function dispatch()
+    public function dispatch(Request $request)
     {
-        $httpMethod = $_SERVER['REQUEST_METHOD'];
-        $uri = $_SERVER['REQUEST_URI'];
+        $uri = $request->getUri();
 
         if (false !== $pos = strpos($uri, '?')) {
             $uri = substr($uri, 0, $pos);
         }
+
         $uri = rawurldecode($uri);
 
-        return $this->dispatcher->dispatch($httpMethod, $uri);
+        return $this->dispatcher->dispatch($request->getMethod(), $uri);
     }
 }
