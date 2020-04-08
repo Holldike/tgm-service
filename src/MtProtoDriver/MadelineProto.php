@@ -2,12 +2,11 @@
 
 namespace MtProtoDriver;
 
-use Api;
 use \danog\MadelineProto\API as MadelineApi;
 use danog\MadelineProto\RPCErrorException;
 use Db;
 
-class MadelineProto extends Driver implements Api
+class MadelineProto extends Driver
 {
     private MadelineApi $api;
 
@@ -61,14 +60,14 @@ class MadelineProto extends Driver implements Api
         return $responseData;
     }
 
-    public function getMessage(int $message_id)
+    public function getMessage(int $messageId)
     {
         $responseData = [];
 
         //Fetch a message from local sent message storage
         $localMessageData = \Db::getConnect()->query("
                     SELECT * FROM sent_message WHERE 
-                    tgm_message_id = '" . (int)$message_id . "' AND
+                    tgm_message_id = '" . (int)$messageId . "' AND
                     tgm_user_id = '" . (int)$this->api->getSelf()['id'] . "' 
                 ")->fetch_assoc();
 

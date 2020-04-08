@@ -2,7 +2,9 @@
 
 namespace MtProtoDriver;
 
-abstract class Driver
+use Api;
+
+abstract class Driver  implements Api
 {
     protected string $sessionDir = 'clientSession';
 }

@@ -14,9 +14,9 @@ class Telegram implements Api
         return $this->driver->sendMessage($phone);
     }
 
-    public function getMessage(int $message_id)
+    public function getMessage(int $messageId)
     {
-        return $this->driver->getMessage($message_id);
+        return $this->driver->getMessage($messageId);
     }
 
     public function login()
