@@ -13,3 +13,12 @@ CREATE TABLE IF NOT EXISTS sent_message
     */
     PRIMARY KEY (tgm_user_id, tgm_message_id)
 );
+
+CREATE TABLE IF NOT EXISTS  log
+(
+    log_id                  INT(11)    AUTO_INCREMENT,
+    request_body            TEXT       NOT NULL,
+    respons_body            TEXT       NOT NULL,
+    sent_at                 DATETIME   NOT NULL,
+    PRIMARY KEY (log_id)
+)
