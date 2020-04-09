@@ -2,14 +2,14 @@
 
 use FastRoute\Dispatcher;
 use Symfony\Component\HttpFoundation\Request;
-
+use FastRoute\RouteCollector;
 class Router
 {
     private Dispatcher $dispatcher;
 
     public function __construct()
     {
-        $this->dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
+        $this->dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
             $r->get('/api/getMessage/{message_id:\d+}', 'getMessage');
             $r->post('/api/sendMessage/{phone:\d+}', 'sendMessage');
         });

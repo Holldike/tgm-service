@@ -5,21 +5,21 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Application
 {
-    private RequestValidator $requestValidator;
+    private Validator $validator;
     private Telegram $telegram;
     private Request $request;
     private Router $router;
     private Logger $logger;
 
     public function __construct(
-        RequestValidator $requestValidator,
+        Validator $requestValidator,
         Telegram $telegram,
         Request $request,
         Logger $logger,
         Router $router
     )
     {
-        $this->requestValidator = $requestValidator;
+        $this->validator = $requestValidator;
         $this->telegram = $telegram;
         $this->request = $request;
         $this->router = $router;
@@ -43,21 +43,33 @@ class Application
 
             case FastRoute\Dispatcher::FOUND:
                 $action = $routeInfo[1];
-                $vars = $routeInfo[2];
+                $params = $routeInfo[2];
+                $params['request'] = $this->request;
 
-                if (!$errors = $this->requestValidator->valid($action)) {
-                    $responseData = $this->telegram->$action(...array_values($vars));
+                if (!$errors = $this->validator->token((string)$this->request->get('token'))) {
+
+                    if (!$errors = $this->validator->methodData($action)) {
+                        $responseData = $this->telegram->$action(...array_values($params));
+                    } else {
+                        $responseData = [
+                            'status' => 'error',
+                            'description' => $errors
+                        ];
+                    }
+
                 } else {
-                    $responseData = $errors;
+                    $responseData = [
+                        'status' => 'error',
+                        'description' => $errors
+                    ];
                 }
 
-                $response->setContent(json_encode([$responseData]));
+                $response->setContent(json_encode($responseData));
                 break;
         }
 
-        //$this->logger->log($this->request, $response);
-
         $response->headers->set('Content-Type', 'application/json');
+        $this->logger->requestLog($this->request, $response);
         return $response;
     }
 }

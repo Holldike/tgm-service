@@ -1,6 +1,5 @@
 <?php
 require_once 'vendor/autoload.php';
-require_once 'config.php';
 
 use \MtProtoDriver\MadelineProto;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,7 +8,13 @@ $driver = new MadelineProto();
 
 $driver->login();
 
-$requestValidator = new RequestValidator();
+if (!file_exists('config.php')) {
+    throw new Exception('Need config file');
+}
+
+require_once 'config.php';
+
+$requestValidator = new Validator();
 $request = Request::createFromGlobals();
 $telegram = new Telegram($driver);
 $router = new Router();

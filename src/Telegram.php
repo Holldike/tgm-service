@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\HttpFoundation\Request;
+
 class Telegram implements Api
 {
     private Api $driver;
@@ -9,14 +11,14 @@ class Telegram implements Api
         $this->driver = $driver;
     }
 
-    public function sendMessage(string $phone)
+    public function sendMessage(string $phone, Request $request)
     {
-        return $this->driver->sendMessage($phone);
+        return $this->driver->sendMessage($phone, $request);
     }
 
-    public function getMessage(int $messageId)
+    public function getMessage(int $messageId, Request $request)
     {
-        return $this->driver->getMessage($messageId);
+        return $this->driver->getMessage($messageId, $request);
     }
 
     public function login()

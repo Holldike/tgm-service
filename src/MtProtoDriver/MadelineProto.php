@@ -2,6 +2,7 @@
 
 namespace MtProtoDriver;
 
+use Symfony\Component\HttpFoundation\Request;
 use \danog\MadelineProto\API as MadelineApi;
 use danog\MadelineProto\RPCErrorException;
 use Db;
@@ -20,7 +21,7 @@ class MadelineProto extends Driver
         ]);
     }
 
-    public function sendMessage(string $phone)
+    public function sendMessage(string $phone, Request $request)
     {
         if (!$contact = $this->importContact($phone)) {
             return [
@@ -40,8 +41,9 @@ class MadelineProto extends Driver
             $message = $this->api->messages->sendMessage(
                 [
                     'peer' => $contact['id'],
-                    'message' => json_decode(file_get_contents('php://input'), true)['text']
-                ]);
+                    'message' => json_decode($request->getContent(), true)['text']
+                ]
+            );
 
             //Added a message who has been sent to local message storage
             Db::getConnect()->query("
@@ -49,7 +51,7 @@ class MadelineProto extends Driver
                         tgm_contact_id = '" . (int)$selfId . "',
                         tgm_to_contact_id = '" . (int)$contact['id'] . "',
                         tgm_message_id = '" . (int)$message['id'] . "',
-                        sent_at = '" . date("Y-m-d H:m:s", $message['date']) . "'
+                        sent_at = '" . date("Y-m-d H:i:s", $message['date']) . "'
                     ");
 
             return [
@@ -65,7 +67,7 @@ class MadelineProto extends Driver
         }
     }
 
-    public function getMessage(int $messageId)
+    public function getMessage(int $messageId, Request $request)
     {
         //Fetch a message from local sent message storage
         $localMessageData = Db::getConnect()->query("
@@ -86,12 +88,9 @@ class MadelineProto extends Driver
         return [
             'to_phone' => $contact['phone'],
             'send_at' => $localMessageData['sent_at'],
-            'read' => (
-                //If contact was online after the message had sent or online now, it mean what it read the message
-                $contact['status']['_'] === 'userStatusOnline' ||
-                $contact['status']['was_online'] < strtotime($localMessageData['sent_at'])
-            ),
-            'status' => 'success'
+            //If contact was online after the message had sent or online now, it mean what it read the message
+            'read' => $contact['status']['_'] === 'userStatusOnline' || $contact['status']['was_online'] > strtotime($localMessageData['sent_at']),
+            'status' => 'delivered'
         ];
     }
 
